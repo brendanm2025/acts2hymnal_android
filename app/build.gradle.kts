@@ -8,8 +8,10 @@ dependencies {
     val navVersion = "2.9.0"
 
     implementation("androidx.navigation:navigation-compose:$navVersion")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito.mockito-core:5.5.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
 }
-
 android {
     namespace = "com.example.acts2hymnal"
     compileSdk = 35

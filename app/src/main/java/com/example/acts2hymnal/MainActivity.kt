@@ -10,9 +10,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val songList = readAllSongs(this@MainActivity)
         setContent {
             Acts2HymnalTheme {
-                HymnalApp()
+                HymnalApp(songList=songList, context=this@MainActivity)
             }
         }
     }

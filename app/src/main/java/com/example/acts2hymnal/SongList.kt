@@ -1,5 +1,7 @@
 package com.example.acts2hymnal
 
+import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +31,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,16 +40,18 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun HymnalApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    songList: List<SongData>,
+    context: Context
 ) {
     NavHost(navController = navController, startDestination = Screen.HymnList.route) {
         composable(Screen.HymnList.route) {
-            HymnScreen(navController)
+            HymnScreen(songList = songList, navController = navController)
         }
         composable(Screen.Song.route) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             if (id != null) {
-                Song(id = id, navController = navController)
+                SongScreen(song = songList[id], navController = navController, context = context)
             }
         }
     }
@@ -53,15 +59,19 @@ fun HymnalApp(
 
 @Composable
 fun HymnScreen(
+    songList: List<SongData>,
     navController: NavHostController = rememberNavController()
 )  {
-    Column {
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.background)
+    ) {
 
         // Menu Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             IconButton(
                 onClick = {/* Handle click */ },
@@ -75,13 +85,13 @@ fun HymnScreen(
         SearchBar()
 
         // Scrollable List
-        HymnScroll(navController)
+        HymnScroll(songList = songList, navController = navController)
 
     }
 }
 
 @Composable
-fun HymnRow(itemIdx: Int, onClick: () -> Unit) {
+fun HymnRow(item: SongData, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +101,10 @@ fun HymnRow(itemIdx: Int, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // First item: name
-        Text(text = "Item #$itemIdx", modifier = Modifier.weight(1f))
+        Text(text = item.name,
+             modifier = Modifier.weight(1f),
+             style = MaterialTheme.typography.bodyLarge,
+             color = MaterialTheme.colorScheme.onBackground)
 
         // TODO: implement Christmas and melody icons
 
@@ -137,13 +150,14 @@ fun SearchBar() {
 // Description: generates the scrollable, clickable list of hymn titles
 //
 @Composable
-fun HymnScroll(navController: NavHostController) {
+fun HymnScroll(songList: List<SongData>, navController: NavHostController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        items(100) { index ->
-            HymnRow(index) {
+        items(songList.size) { index ->
+            HymnRow(songList[index]) {
                 navController.navigate(Screen.Song.createRoute(index))
             }
         }
