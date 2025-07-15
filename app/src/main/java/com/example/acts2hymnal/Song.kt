@@ -5,6 +5,7 @@ package com.example.acts2hymnal
 //import androidx.compose.material3.ExperimentalMaterial3Api
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -60,9 +61,8 @@ fun SongScreen(song: SongData,
     var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null)}
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(WindowInsets.systemBars.asPaddingValues()),
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             SongAppBar(song = song, navController = navController, isPlaying = isPlaying) {
                 if (mediaPlayer == null) {
@@ -85,6 +85,7 @@ fun SongScreen(song: SongData,
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .padding(WindowInsets.systemBars.asPaddingValues())
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {

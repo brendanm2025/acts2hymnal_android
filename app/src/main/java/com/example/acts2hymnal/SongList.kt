@@ -31,12 +31,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun HymnalApp(
@@ -57,38 +62,55 @@ fun HymnalApp(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HymnScreen(
     songList: List<SongData>,
     navController: NavHostController = rememberNavController()
-)  {
-    Column(modifier = Modifier
-        .background(MaterialTheme.colorScheme.background)
-    ) {
-
-        // Menu Button
-        Box(
+) {
+    Scaffold(
+//        topBar = {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(36.dp)
+//                    .background(MaterialTheme.colorScheme.background)
+//            ) {
+//                IconButton(
+//                    onClick = { /* Handle menu click */ },
+//                    modifier = Modifier.align(Alignment.CenterEnd).padding(start = 16.dp)
+//                ) {
+//                    Icon(Icons.Default.Menu, contentDescription = "Menu")
+//                }
+//            }
+//        },
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = {},
+                    modifier = Modifier,
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    }
+                )
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(36.dp)
+                .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            IconButton(
-                onClick = {/* Handle click */ },
-                modifier = Modifier.align(Alignment.CenterEnd).padding(start = 16.dp)
-            ) {
-                Icon(Icons.Default.Menu, contentDescription = null)
-            }
+
+            // Scrollable List
+            HymnScroll(songList = songList, navController = navController)
         }
-
-        // Search Bar
-        SearchBar()
-
-        // Scrollable List
-        HymnScroll(songList = songList, navController = navController)
-
     }
 }
+
 
 @Composable
 fun HymnRow(item: SongData, onClick: () -> Unit) {
@@ -106,44 +128,24 @@ fun HymnRow(item: SongData, onClick: () -> Unit) {
              style = MaterialTheme.typography.bodyLarge,
              color = MaterialTheme.colorScheme.onBackground)
 
-        // TODO: implement Christmas and melody icons
+        if (item.christmas) {
+            Icon(
+                painter = painterResource(id = R.drawable.snow),
+                contentDescription = "Christmas",
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        if (item.audio_file != "") {
+            Icon(
+                painter = painterResource(id = R.drawable.music_note),
+                contentDescription = "Audio File",
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+        }
 
         // Last item: side arrow
         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
     }
-}
-
-@Composable
-fun SearchBar() {
-    var query by remember { mutableStateOf("") }
-
-    TextField(
-        value = query,
-        onValueChange = { query = it },
-//        colors = TextFieldDefaults.textFieldColors(
-//            containerColor = Color.White,
-//            textColor = Color.Black
-//        )
-        placeholder = {
-            Text(
-                text = "Search",
-                style = TextStyle(fontSize = 16.sp)
-            )
-        },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-        trailingIcon = {
-            if (query.isNotEmpty()) {
-                IconButton(onClick = { query = ""} ) {
-                    Icon(Icons.Default.Close, contentDescription = "Clear")
-                }
-            }
-        },
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-            .height(48.dp)
-    )
 }
 
 // Function: Hymn Scroll
@@ -163,3 +165,21 @@ fun HymnScroll(songList: List<SongData>, navController: NavHostController) {
         }
     }
 }
+
+//fun SnowflakeIcon() {
+//    Icon(
+//        painter = painterResource(id = R.drawable.snow), // <- this is your drawable
+//        contentDescription = "Snowflake",
+//        //tint = Color.Black, // Optional: remove or change as needed
+//        modifier = Modifier.size(24.dp)
+//    )
+//}
+//
+//fun MusicNoteIcon() {
+//    Icon(
+//        painter = painterResource(id = R.drawable.music_note), // <- this is your drawable
+//        contentDescription = "Snowflake",
+//        //tint = Color.Black, // Optional: remove or change as needed
+//        modifier = Modifier.size(24.dp)
+//    )
+//}
