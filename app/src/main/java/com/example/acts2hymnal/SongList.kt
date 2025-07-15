@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
@@ -40,9 +41,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.res.painterResource
 
+// this defines the main view of the app, i.e. the scrollable list screen
 @Composable
 fun HymnalApp(
     navController: NavHostController = rememberNavController(),
@@ -56,7 +59,10 @@ fun HymnalApp(
         composable(Screen.Song.route) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             if (id != null) {
-                SongScreen(song = songList[id], navController = navController, context = context)
+                val song = songList.find {it.id == id}
+                if (song != null) {
+                    SongScreen(song = song, navController = navController, context = context)
+                }
             }
         }
     }
@@ -68,34 +74,45 @@ fun HymnScreen(
     songList: List<SongData>,
     navController: NavHostController = rememberNavController()
 ) {
+
+    var searchQuery by remember { mutableStateOf("") }
+
+    val filteredList = remember(searchQuery, songList) {
+        if (searchQuery.isEmpty()) {
+            songList
+        } else {
+            songList.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
+    }
+
     Scaffold(
-//        topBar = {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(36.dp)
-//                    .background(MaterialTheme.colorScheme.background)
-//            ) {
-//                IconButton(
-//                    onClick = { /* Handle menu click */ },
-//                    modifier = Modifier.align(Alignment.CenterEnd).padding(start = 16.dp)
-//                ) {
-//                    Icon(Icons.Default.Menu, contentDescription = "Menu")
-//                }
-//            }
-//        },
         topBar = {
-            Column {
-                TopAppBar(
-                    title = {},
-                    modifier = Modifier,
-                    actions = {
-                        IconButton(onClick = {}) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+            TopAppBar(
+                title = {
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        placeholder = { Text("Search") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(Icons.Default.Search, contentDescription = null)
+                        },
+                        trailingIcon = {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { searchQuery = "" }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Clear search")
+                                }
+                            }
                         }
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { /* settings or menu */ }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
                     }
-                )
-            }
+                }
+            )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -106,12 +123,12 @@ fun HymnScreen(
         ) {
 
             // Scrollable List
-            HymnScroll(songList = songList, navController = navController)
+            HymnScroll(songList = filteredList, navController = navController)
         }
     }
 }
 
-
+// Defines a single row of the scrollable, clickable list
 @Composable
 fun HymnRow(item: SongData, onClick: () -> Unit) {
     Row(
@@ -158,28 +175,11 @@ fun HymnScroll(songList: List<SongData>, navController: NavHostController) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        items(songList.size) { index ->
-            HymnRow(songList[index]) {
-                navController.navigate(Screen.Song.createRoute(index))
+        items(songList) { song ->
+            HymnRow(song) {
+                navController.navigate(Screen.Song.createRoute(song.id))
             }
         }
     }
 }
 
-//fun SnowflakeIcon() {
-//    Icon(
-//        painter = painterResource(id = R.drawable.snow), // <- this is your drawable
-//        contentDescription = "Snowflake",
-//        //tint = Color.Black, // Optional: remove or change as needed
-//        modifier = Modifier.size(24.dp)
-//    )
-//}
-//
-//fun MusicNoteIcon() {
-//    Icon(
-//        painter = painterResource(id = R.drawable.music_note), // <- this is your drawable
-//        contentDescription = "Snowflake",
-//        //tint = Color.Black, // Optional: remove or change as needed
-//        modifier = Modifier.size(24.dp)
-//    )
-//}

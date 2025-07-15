@@ -12,6 +12,7 @@ class SongData(
     var composer: String = "",
     var translator: String = "",
     var christmas: Boolean = false,
+    var id: Int = 0,
 
     // raw verse/chorus chunks
     val chunks: MutableList<String> = mutableListOf(),
@@ -144,7 +145,6 @@ fun readAllSongs(context: Context): List<SongData> {
 
     // sort the SongData list alphabetically
     val allSongsSorted = allSongs.sorted()
-    allSongsSorted.forEach {item -> println("${item.name}\n${item.chunks.last()}\n")
-    }
+    allSongsSorted.forEachIndexed {idx, item -> item.id = idx}
     return allSongsSorted
 }
