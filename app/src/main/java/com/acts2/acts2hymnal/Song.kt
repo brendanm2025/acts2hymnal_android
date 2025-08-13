@@ -138,7 +138,7 @@ fun SongAppBar(
             }
         },
         actions = {
-            if (song.audio_file != "") {
+            if (song.audio_file.isNotEmpty()) {
                 IconButton(onClick = onTogglePlay) {
                     Icon(
                         imageVector = if (isPlaying) {

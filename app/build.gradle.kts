@@ -18,8 +18,8 @@ android {
         applicationId = "com.acts2.acts2hymnal"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,7 +43,7 @@ android {
     buildFeatures {
         compose = true
     }
-    dynamicFeatures.add(":audio_assets")
+    dynamicFeatures += setOf(":audio_assets_1", ":audio_assets_2")
 
 }
 

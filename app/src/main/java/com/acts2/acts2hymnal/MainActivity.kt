@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         val songList = readAllSongs(this@MainActivity)
         setContent {
             Acts2HymnalTheme {
-                HymnalApp(songList=songList, context=this@MainActivity)
+                HymnalApp(songList=songList, assetDownloader = assetDownloader, context=this@MainActivity)
             }
         }
     }

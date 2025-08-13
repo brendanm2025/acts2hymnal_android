@@ -44,6 +44,7 @@ import com.acts2.acts2hymnal.R
 fun HymnalApp(
     navController: NavHostController = rememberNavController(),
     songList: List<SongData>,
+    assetDownloader: AssetDownloader,
     context: Context
 ) {
     NavHost(navController = navController, startDestination = Screen.HymnList.route) {
@@ -58,6 +59,9 @@ fun HymnalApp(
                     SongScreen(song = song, navController = navController, context = context)
                 }
             }
+        }
+        composable(Screen.Settings.route) {
+            Settings(navController = navController, assetDownloader = assetDownloader)
         }
     }
 }
@@ -102,8 +106,8 @@ fun HymnScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { /* settings or menu */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Go to settings")
                     }
                 }
             )

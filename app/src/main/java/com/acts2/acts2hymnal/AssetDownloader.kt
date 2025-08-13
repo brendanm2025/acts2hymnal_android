@@ -19,11 +19,12 @@ class AssetDownloader(private val context: Context) {
         context.getSharedPreferences("audio_assets_pref", Context.MODE_PRIVATE)
 
     private val manager = SplitInstallManagerFactory.create(context)
-    private val moduleName = "audio_assets"
+    private val moduleName = "audio_assets_1"
+    private val moduleNameTwin = "audio_assets_2"
 
 
     fun isInstalled(): Boolean {
-        return manager.installedModules.contains(moduleName)
+        return manager.installedModules.contains(moduleName) && manager.installedModules.contains(moduleNameTwin)
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
@@ -63,6 +64,7 @@ class AssetDownloader(private val context: Context) {
 
         val request = SplitInstallRequest.newBuilder()
             .addModule(moduleName)
+            .addModule(moduleNameTwin)
             .build()
 
         manager.startInstall(request)
@@ -70,24 +72,28 @@ class AssetDownloader(private val context: Context) {
             .addOnFailureListener { e -> Log.d("AssetDownloader", "Download failed: $e") }
 
         manager.registerListener { state ->
-            if (state.moduleNames().contains(moduleName)) {
-                val progress = state.bytesDownloaded() * 100 / state.totalBytesToDownload()
-                Log.d("AssetDownloader", "Progress: $progress%")
+            state.moduleNames().forEach { module ->
+                val progress = if (state.totalBytesToDownload() > 0)
+                    state.bytesDownloaded() * 100 / state.totalBytesToDownload()
+                else 0
+                Log.d("AssetDownloader", "Module $module progress: $progress%")
 
                 if (state.status() == SplitInstallSessionStatus.INSTALLED) {
-                    Log.d("AssetDownloader", "Audio module installed successfully")
+                    Log.d("AssetDownloader", "Module $module installed successfully")
                 }
             }
         }
     } // startDownload()
 
-    private fun uninstallModule() {
-        if (!isInstalled()) return
+    fun uninstallModules() {
+        val modulesToUninstall = listOf(moduleName, moduleNameTwin)
+            .filter { manager.installedModules.contains(it) }
 
-        manager.deferredUninstall(listOf(moduleName))
-            .addOnSuccessListener { Log.d("AssetDownloader", "$moduleName scheduled for uninstall") }
-            .addOnFailureListener { e -> Log.d("AssetDownloader", "Failed to uninstall $moduleName: $e")
-        }
-    }
+        if (modulesToUninstall.isEmpty()) return
+
+        manager.deferredUninstall(modulesToUninstall)
+            .addOnSuccessListener { Log.d("AssetDownloader", "$modulesToUninstall scheduled for uninstall") }
+            .addOnFailureListener { e -> Log.d("AssetDownloader", "Failed to uninstall: $e") }
+    } // uninstallModule()
 
 }

@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 android {
-    namespace = "com.example.audio_assets"
+    namespace = "com.acts2.audio_assets_1"
     compileSdk = 35
 
     defaultConfig {

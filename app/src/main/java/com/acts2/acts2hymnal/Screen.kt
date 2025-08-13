@@ -5,4 +5,5 @@ sealed class Screen(val route: String) {
     data object Song : Screen("song/{id}") {
         fun createRoute(id: Int) = "song/$id"
     }
+    data object Settings : Screen("settings")
 }
