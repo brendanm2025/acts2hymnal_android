@@ -1,10 +1,10 @@
-package com.example.acts2hymnal.ui.theme
+package com.acts2.acts2hymnal.ui.theme
 
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.acts2hymnal.HymnScreen
-import com.example.acts2hymnal.SongData
+import com.acts2.acts2hymnal.HymnScreen
+import com.acts2.acts2hymnal.SongData
 import androidx.navigation.compose.rememberNavController
 
 @Preview(showBackground = true, showSystemUi = true)

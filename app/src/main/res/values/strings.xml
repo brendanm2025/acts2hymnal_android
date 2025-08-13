@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Acts2Hymnal</string>
+    <string name="title_audio_assets">Audio Files</string>
 </resources>

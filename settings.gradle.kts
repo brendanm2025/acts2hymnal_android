@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Acts2Hymnal"
 include(":app")
- 
+include(":audio_assets")

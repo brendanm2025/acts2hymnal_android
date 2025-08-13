@@ -1,4 +1,4 @@
-package com.example.acts2hymnal
+package com.acts2.acts2hymnal
 
 import android.content.Context
 import android.content.res.AssetManager
@@ -90,8 +90,7 @@ fun readAllSongs(context: Context): List<SongData> {
             "name:: " to { value -> song.name = value },
             "author:: " to { value -> song.author = value },
             "composer:: " to { value -> song.composer = value },
-            "translator:: " to { value -> song.translator = value },
-            "collection:: " to { value -> song.translator = value }
+            "translator:: " to { value -> song.translator = value }
         )
         var reachedText = false
         val sb = StringBuilder()

@@ -1,4 +1,4 @@
-package com.example.acts2hymnal
+package com.acts2.acts2hymnal
 
 sealed class Screen(val route: String) {
     data object HymnList : Screen("hymn_list")

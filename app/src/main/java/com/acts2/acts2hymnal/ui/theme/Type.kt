@@ -1,4 +1,4 @@
-package com.example.acts2hymnal.ui.theme
+package com.acts2.acts2hymnal.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -9,15 +9,13 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:$navVersion")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito.mockito-core:5.5.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
 }
 android {
-    namespace = "com.example.acts2hymnal"
+    namespace = "com.acts2.acts2hymnal"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.acts2hymnal"
+        applicationId = "com.acts2.acts2hymnal"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -45,10 +43,13 @@ android {
     buildFeatures {
         compose = true
     }
+    dynamicFeatures.add(":audio_assets")
+
 }
 
 dependencies {
-
+    implementation(libs.feature.delivery.ktx)
+    // implementation(libs.feature.delivery) // this might be incorrect, double-check this if there's a problem
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

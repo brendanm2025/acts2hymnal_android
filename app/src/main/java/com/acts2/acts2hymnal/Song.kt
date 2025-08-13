@@ -1,12 +1,10 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.acts2hymnal
+package com.acts2.acts2hymnal
 
 //import androidx.compose.material3.ExperimentalMaterial3Api
 import android.content.Context
 import android.media.MediaPlayer
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -32,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -46,8 +43,6 @@ import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.unit.dp
-
 
 
 //@OptIn(ExperimentalMaterial3Api::class)
@@ -105,12 +100,10 @@ fun SongScreen(song: SongData,
                     } else {
                         append(chunk)
                     }
-
                     append("\n")
-
-
-
                 }
+                append("\n")
+                append(song.buildMetadata())
             }
             Text(
                 text = styledText,

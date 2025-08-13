@@ -1,4 +1,4 @@
-package com.example.acts2hymnal
+package com.acts2.audio_assets
 
 import org.junit.Test
 
